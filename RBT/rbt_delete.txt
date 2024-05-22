@@ -1,0 +1,140 @@
+
+RB_TRANSPLANT(T, u, v)
+
+    // u가 루트인 경우 v를 새로운 루트로 설정
+    if u.p == T.nil
+        T.root = v
+
+    // u가 왼쪽 자식인 경우
+    else if u == u.p.left
+        u.p.left = v
+    
+    // u가 오른쪽 자식인 경우
+    else
+        u.p.right = v
+    
+    // 부모 노드 연결
+    v.p = u.p
+
+
+RB_DELETE(T, z)
+
+    // 삭제할 노드 z의 원래 색 저장
+    y = z
+    y_original_color = y.color
+
+    // z의 왼쪽 자식이 없는 경우, z를 자신의 오른쪽 자식으로 대체
+    if z.left == T.nil
+        x = z.right
+        RB_TRANSPLANT(T, z, z.right)
+
+    // z의 오른쪽 자식이 없는 경우, z를 자신의 왼쪽 자식으로 대체
+    else if z.right == T.nil
+        x = z.left
+        RB_TRANSPLANT(T, z, z.left)
+    
+    // z의 자식이 둘 다 있는 경우
+    else
+        // 후계자 y는 z의 오른쪽 서브 트리에서 최솟값을 갖는 노드
+        // y는 왼쪽 서브 트리를 갖느 않는다는 것을 명심할 것
+        y = TREE_MINIMUM(z.right)
+        y_original_color = y.color
+        x = y.right
+
+        // y가 z 바로 아래의 직접적인 자식인 경우
+        if y.p == z
+            x.p = y
+        
+        // y가 z의 직접적인 자식이 아닌 경우에는 y를 자신의 오른쪽 자식으로 대체한 후
+        // y의 오른쪽 자식을 z의 오른쪽 자식으로, 그 자식의 부모를 y 자기자신으로 설정
+        else
+            RB_TRANSPLANT(T, y, y.right)
+            y.right = z.right
+            y.right.p = y
+        
+        // z를 y로 대체하고 z의 왼쪽 서브 트리를 y에 연결
+        RB_TRANSPLANT(T, z, y)
+        y.left = z.left
+        y.left.p = y
+        y.color = z.color
+    
+    // y의 원래 색이 black인 경우 트리의 균형을 맞춰주기 위해 구조를 조정
+    if y_original_color == BLACK
+        RB_DELETE_FIXUP(T, x)
+
+
+
+RB_DELETE_FIXUP(T, x)
+
+    // x가 root 노드가 아니고 black일 동안 반복
+    while x != T.root and x.color == BLACK
+
+        // x가 자신의 부모의 왼쪽 자식인 경우
+        // x의 형제 노드 w는 x의 형제 부모의 오른쪽 자식
+        if x == x.p.left
+            w = x.p.right
+
+            // case 1: x의 형제 노드인 w가 red인 경우
+            if w.color == RED 
+                w.color = BLACK
+                x.p.color = RED
+                LEFT_ROTATE(T, x.p)
+                w = x.p.right
+
+            // 아래 세 가지 케이스는 모두 x의 형제 노드 w가 black인 경우
+            // case 2: w의 왼쪽 자식과 오른쪽 자식이 모두 black인 경우
+            if w.left.color == BLACK and w.right.color == BLACK
+                w.color = RED
+                x = x.p
+            
+            else
+                // case 3: w의 왼쪽 자식이 red이고, 오른쪽 자식이 black인 경우
+                if w.right.color == BLACK
+                    w.left.color = BLACK
+                    w.color = RED
+                    RIGHT_ROTATE(T, w)
+                    w = x.p.right
+                
+                // case 4: w의 왼쪽 자식이 black이고, 오른쪽 자식이 red인 경우
+                w.color = x.p.color
+                x.p.color = BLACK
+                w.right.color = BLACK
+                LEFT_ROTATE(T, x.p)
+                // 트리의 root 노드를 x로 설정하여 반복문 종료
+                x = T.root
+
+        // x가 자신의 부모의 오른쪽 자식인 경우 (위와 대칭적인 구조)
+        // x의 형제 노드 w는 x의 형제 부모의 왼쪽 자식
+        else
+            w = x.p.left
+
+            // case 1: x의 형제 노드인 w가 red인 경우
+            if w.color == RED 
+                w.color = BLACK
+                x.p.color = RED
+                RIGHT_ROTATE(T, x.p)
+                w = x.p.left
+
+            // 아래 세 가지 케이스는 모두 x의 형제 노드 w가 black인 경우
+            // case 2: w의 오른쪽 자식과 왼쪽 자식이 모두 black인 경우
+            if w.right.color == BLACK and w.left.color == BLACK
+                w.color = RED
+                x = x.p
+            
+            else
+                // case 3: w의 오른쪽 자식이 red이고, 왼쪽 자식이 black인 경우
+                if w.left.color == BLACK
+                    w.right.color = BLACK
+                    w.color = RED
+                    LEFT_ROTATE(T, w)
+                    w = x.p.left
+                
+                // case 4: w의 오른쪽 자식이 black이고, 왼쪽 자식이 red인 경우
+                w.color = x.p.color
+                x.p.color = BLACK
+                w.left.color = BLACK
+                RIGHT_ROTATE(T, x.p)
+                // 트리의 root 노드를 x로 설정하여 반복문 종료
+                x = T.root
+
+     x.color = BLACK
