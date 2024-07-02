@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 // 1차원 배열을 이용한 0-1 KnapSack 문제 풀이
-// 공간효율성 개선
+// 공간효율성 개선 
 
 int max(int a, int b)
 {
