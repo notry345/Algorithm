@@ -5,16 +5,16 @@ int n;
 // x와 y는 좌표 (x, y)
 void star(int x, int y, int n)
 {
-    // 공백조건
-    if ((n / 3) <= x && x < (2 * n / 3) && (n / 3) <= y && y < (2 * n / 3))
+    if ((x / n) % 3 == 1 && (y / n) % 3 == 1)
         printf(" ");
-
     else
     {
         if (n == 1)
+        {
             printf("*");
-        else
-            star(x, y, n / 3);
+            return;
+        }
+        star(x, y, n / 3);
     }
 }
 
