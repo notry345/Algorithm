@@ -6,7 +6,7 @@ char rgb[MAX + 1][MAX + 1];
 // DFS with stack
 int pointer = 0; // stack pointer
 int normal = 0;  // 정상인이 보는 구역의 개수
-int blind = 0; // 적록색맹
+int blind = 0;   // 적록색맹
 
 typedef struct
 {
@@ -48,6 +48,7 @@ int main()
         }
         getchar();
     }
+    printf("\n");
 
     // 우, 하, 좌, 상 순 탐색
     int dx[] = {1, 0, -1, 0};
@@ -83,6 +84,15 @@ int main()
                         push(newX, newY);
                 }
             }
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    printf("%c",rgb[i][j]);
+                }
+                printf("\n");
+            }
+            printf("\n");
             normal++;
         }
     }

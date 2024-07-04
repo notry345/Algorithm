@@ -47,9 +47,9 @@ int main()
     scanf("%d %d", &m, &n);
 
     // 배열 초기화
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) // 세로
     {
-        for (int j = 0; j < m; j++)
+        for (int j = 0; j < m; j++) // 가로
         {
             int x;
             scanf("%d", &x);
@@ -98,7 +98,7 @@ int main()
         // 토마토 다 익음!
         if (unripe == 0)
         {
-            printf("%d", current.day+1);
+            printf("%d", current.day + 1);
             return 0;
         }
     }
